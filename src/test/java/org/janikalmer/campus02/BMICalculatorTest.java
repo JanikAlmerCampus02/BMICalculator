@@ -1,49 +1,85 @@
 package org.janikalmer.campus02;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-    public class BMICalculatorTest {
-        @Test
-        public void testConstructor() {
-            BMICalculator bmi = new BMICalculator("Max", "Mustermann", 170, 70, 'm');
-            assertEquals("Max", bmi.getFirstname());
-            assertEquals("Mustermann", bmi.getLastname());
-            assertEquals(170, bmi.getBodyHeight());
-            assertEquals(70.0, bmi.getBodyWeight());
-            assertEquals('m', bmi.getGender());
-        }
+public class BMICalculatorTest {
 
-        @Test
-        public void testCalculateBMI() {
-            // Test 1: Person mit bodyHeight = 170 cm, bodyWeight = 70 kg
-            BMICalculator person1 = new BMICalculator("Max", "Mustermann", 170, 70, 'm');
-            assertEquals(24.22, person1.calculateBMI(), 0.01);
+    @Test
+    public void testConstructor() {
+        BMICalculator bmi = new BMICalculator("Max", "Mustermann", 170, 70, 'm');
 
-            // Test 2: Person mit bodyHeight = 180 cm, bodyWeight = 120 kg
-            BMICalculator person2 = new BMICalculator("Lisa", "Müller", 180, 120, 'w');
-            assertEquals(37.04, person2.calculateBMI(), 0.01);
-        }
+        // Normalfall: Überprüfen, ob Werte korrekt gesetzt wurden
+        assertEquals("Max", bmi.getFirstname());
+        assertEquals("Mustermann", bmi.getLastname());
+        assertEquals(170, bmi.getBodyHeight());
+        assertEquals(70.0, bmi.getBodyWeight());
+        assertEquals('m', bmi.getGender());
 
-        @Test
-        public void testCalculateBMICategory() {
-            // Test 1: Frau mit BMI 24.22 → Erwartete Kategorie: 1
-            BMICalculator person1 = new BMICalculator("Lisa", "Müller", 170, 70, 'w');
-            assertEquals(1, person1.calculateBMICategory());
+        // Setter testen
+        bmi.setBodyHeight(180);
+        assertEquals(180, bmi.getBodyHeight());
 
-            // Test 2: Mann mit BMI 37.04 → Erwartete Kategorie: 2
-            BMICalculator person2 = new BMICalculator("Max", "Mustermann", 180, 120, 'm');
-            assertEquals(2, person2.calculateBMICategory());
-        }
-
-        @Test
-        public void testGetBMICategoryName() {
-            // Test 1: BMI-Kategorie 1 → Erwartete Ausgabe: "Übergewicht"
-            BMICalculator person1 = new BMICalculator("Lisa", "Müller", 170, 70, 'w'); // BMI = 24.22, Kategorie = 1
-            assertEquals("Übergewicht", person1.getBMICategoryName());
-
-            // Test 2: BMI-Kategorie 2 → Erwartete Ausgabe: "Sehr starkes Übergewicht"
-            BMICalculator person2 = new BMICalculator("Max", "Mustermann", 180, 120, 'm'); // BMI = 37.04, Kategorie = 2
-            assertEquals("Sehr starkes Übergewicht", person2.getBMICategoryName());
-        }
+        bmi.setBodyWeight(80);
+        assertEquals(80.0, bmi.getBodyWeight());
     }
+
+    @Test
+    public void testCalculateBMI() {
+        // Normalfälle
+        BMICalculator person1 = new BMICalculator("Max", "Mustermann", 170, 70, 'm');
+        assertEquals(24.22, person1.calculateBMI(), 0.01);
+
+        BMICalculator person2 = new BMICalculator("Lisa", "Müller", 180, 120, 'w');
+        assertEquals(37.04, person2.calculateBMI(), 0.01);
+
+        // Edge Cases
+        BMICalculator underweight = new BMICalculator("Anna", "Becker", 160, 45, 'w'); // Sehr niedriges Gewicht
+        assertEquals(17.58, underweight.calculateBMI(), 0.01);
+
+        BMICalculator overweight = new BMICalculator("Tom", "Klein", 190, 150, 'm'); // Sehr hohes Gewicht
+        assertEquals(41.52, overweight.calculateBMI(), 0.01);
+    }
+
+    @Test
+    public void testCalculateBMICategory() {
+        // Normalfälle
+        BMICalculator normalWeight = new BMICalculator("Max", "Mustermann", 170, 70, 'm'); // BMI: 24.22 → Kategorie 0
+        assertEquals(0, normalWeight.calculateBMICategory());
+
+        BMICalculator overweight = new BMICalculator("Lisa", "Müller", 180, 120, 'w'); // BMI: 37.04 → Kategorie 2
+        assertEquals(2, overweight.calculateBMICategory());
+
+        // Edge Cases
+        BMICalculator veryUnderweight = new BMICalculator("Anna", "Becker", 170, 45, 'w'); // BMI: 15.6 → Kategorie -2
+        assertEquals(-2, veryUnderweight.calculateBMICategory());
+
+        BMICalculator underweight = new BMICalculator("John", "Smith", 175, 55, 'm'); // BMI: 17.96 → Kategorie -1
+        assertEquals(-1, underweight.calculateBMICategory());
+
+        BMICalculator highOverweight = new BMICalculator("Tom", "Klein", 190, 150, 'm'); // BMI: 41.52 → Kategorie 2
+        assertEquals(2, highOverweight.calculateBMICategory());
+    }
+
+    @Test
+    public void testGetBMICategoryName() {
+        // Normalfälle
+        BMICalculator normalWeight = new BMICalculator("Max", "Mustermann", 170, 70, 'm');
+        assertEquals("Normalgewicht", normalWeight.getBMICategoryName());
+
+        BMICalculator overweight = new BMICalculator("Lisa", "Müller", 180, 120, 'w');
+        assertEquals("Sehr starkes Übergewicht", overweight.getBMICategoryName());
+
+        // Edge Cases
+        BMICalculator veryUnderweight = new BMICalculator("Anna", "Becker", 170, 45, 'w');
+        assertEquals("Sehr starkes Untergewicht", veryUnderweight.getBMICategoryName());
+
+        BMICalculator underweight = new BMICalculator("John", "Smith", 175, 55, 'm');
+        assertEquals("Untergewicht", underweight.getBMICategoryName());
+
+        BMICalculator highOverweight = new BMICalculator("Tom", "Klein", 190, 150, 'm');
+        assertEquals("Sehr starkes Übergewicht", highOverweight.getBMICategoryName());
+    }
+}
+
 
