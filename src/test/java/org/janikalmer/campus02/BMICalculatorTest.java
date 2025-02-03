@@ -23,5 +23,16 @@ import org.junit.jupiter.api.Test;
             BMICalculator person2 = new BMICalculator("Lisa", "Müller", 180, 120, 'w');
             assertEquals(37.04, person2.calculateBMI(), 0.01);
         }
+
+        @Test
+        public void testCalculateBMICategory() {
+            // Test 1: Frau mit BMI 24.22 → Erwartete Kategorie: 1
+            BMICalculator person1 = new BMICalculator("Lisa", "Müller", 170, 70, 'w');
+            assertEquals(1, person1.calculateBMICategory());
+
+            // Test 2: Mann mit BMI 37.04 → Erwartete Kategorie: 2
+            BMICalculator person2 = new BMICalculator("Max", "Mustermann", 180, 120, 'm');
+            assertEquals(2, person2.calculateBMICategory());
+        }
     }
 
