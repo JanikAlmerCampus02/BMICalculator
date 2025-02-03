@@ -34,5 +34,16 @@ import org.junit.jupiter.api.Test;
             BMICalculator person2 = new BMICalculator("Max", "Mustermann", 180, 120, 'm');
             assertEquals(2, person2.calculateBMICategory());
         }
+
+        @Test
+        public void testGetBMICategoryName() {
+            // Test 1: BMI-Kategorie 1 → Erwartete Ausgabe: "Übergewicht"
+            BMICalculator person1 = new BMICalculator("Lisa", "Müller", 170, 70, 'w'); // BMI = 24.22, Kategorie = 1
+            assertEquals("Übergewicht", person1.getBMICategoryName());
+
+            // Test 2: BMI-Kategorie 2 → Erwartete Ausgabe: "Sehr starkes Übergewicht"
+            BMICalculator person2 = new BMICalculator("Max", "Mustermann", 180, 120, 'm'); // BMI = 37.04, Kategorie = 2
+            assertEquals("Sehr starkes Übergewicht", person2.getBMICategoryName());
+        }
     }
 
